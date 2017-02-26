@@ -1,2 +1,7 @@
 /TicTacToe/bin/Debug
 /TicTacToe/obj/Debug
+/TicTacToe.Logic/obj/Debug
+/TicTacToe.Logic/bin/Debug
+/TicTacToe.Tests/bin/Debug
+/TicTacToe.Tests/obj/Debug
+/.vs
