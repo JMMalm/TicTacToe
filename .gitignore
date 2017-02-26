@@ -4,4 +4,4 @@
 /TicTacToe.Logic/bin/Debug
 /TicTacToe.Tests/bin/Debug
 /TicTacToe.Tests/obj/Debug
-/.vs
+*.suo
