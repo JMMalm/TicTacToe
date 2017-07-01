@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -13,6 +14,12 @@ namespace TicTacToe
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		private const string Player1Message = "Go Player 1!";
+		private const string Player2Message = "Go Player 2!";
+		private const string TiedGameMessage = "It's a tie!";
+		private const string SymbolX = "X";
+		private const string SymbolO = "O";
+
 		/// <summary>
 		/// Manages the logic details of the game, separating those concerns
 		/// from the game's UI.
@@ -31,18 +38,16 @@ namespace TicTacToe
 			}
 		}
 
-		private const string Player1Message = "Go Player 1!";
-		private const string Player2Message = "Go Player 2!";
-
-
 		/// <summary>
 		/// The primary UI that the user interacts with. Contains our game objects.
 		/// </summary>
+		/// <remarks>
+		/// Player 1 always starts first and is "X" with red background.
+		/// </remarks>
 		public MainWindow()
 		{
 			InitializeComponent();
-			// Player 1 (red) starts first.
-			UpdateLabelsForNextPlayer(Player1Message, Brushes.Red);
+			UpdateGameLabelForNextPlayer(Player1Message, Brushes.Red);
 		}
 
 		/// <summary>
@@ -52,14 +57,27 @@ namespace TicTacToe
 		/// <param name="e"></param>
 		private void OnRectangleClick(object sender, MouseButtonEventArgs e)
 		{
-			Rectangle clickedPiece = e.Source as Rectangle;
-			UpdateGameUi(clickedPiece);
-			UpdateGameLogicMap(Convert.ToInt32(clickedPiece.Uid));
-			TicTacToeLogic.MoveCounter++;
-
-			if (TicTacToeLogic.MoveCounter >= 5)
+			if (TicTacToeLogic.GameOver)
 			{
-				TicTacToeLogic.CheckForGameWinner();
+				return;
+			}
+
+			Rectangle clickedPiece = e.Source as Rectangle;
+			int rectangleId = Convert.ToInt32(clickedPiece.Uid);
+
+			if (IsValidMove(rectangleId))
+			{
+				UpdateGameUi(clickedPiece);
+				UpdateGameLogicMap(rectangleId);
+				TicTacToeLogic.MoveCounter++;
+
+				if (TicTacToeLogic.MoveCounter >= 5)
+				{
+					CheckForGameWinner();
+					CheckForGameTie();
+				}
+
+				TicTacToeLogic.CurrentPlayer = TicTacToeLogic.IsPlayerOneTurn ? 1 : 2;
 			}
 		}
 
@@ -70,31 +88,75 @@ namespace TicTacToe
 		/// <param name="e"></param>
 		private void btn_Reset_Click(object sender, RoutedEventArgs e)
 		{
-			foreach(Rectangle gamePieces in grid_TicTacToe.Children.OfType<Rectangle>())
+			foreach (Rectangle gamePieces in grid_TicTacToe.Children.OfType<Rectangle>())
 			{
 				gamePieces.Fill = new SolidColorBrush(Colors.White);
 			}
 
-			TicTacToeLogic.MoveCounter = 0;
-			TicTacToeLogic.PickedRectangles = new int[9];
-			UpdateLabelsForNextPlayer(Player1Message, Brushes.Red);
+			TicTacToeLogic.ResetGame();
+			UpdateGameLabelForNextPlayer(Player1Message, Brushes.Red);
+		}
+
+		/// <summary>
+		/// Examines the game board after a player has moved to determine
+		/// if there is a winner.
+		/// </summary>
+		/// <remarks>
+		/// This code will halt the game if a winner exists; in that case,
+		/// the game must be reset via the 'Reset' button.
+		/// </remarks>
+		private void CheckForGameWinner()
+		{
+			TicTacToeLogic.CheckForGameWinner();
+
+			if (TicTacToeLogic.GameOver)
+			{
+				UpdateGameLabelForNextPlayer(string.Format("Player {0} has won!", TicTacToeLogic.CurrentPlayer), Brushes.DarkGoldenrod);
+			}
+		}
+
+		/// <summary>
+		/// Ends the game if there is no winner after all 9 rectangles have been picked.
+		/// </summary>
+		private void CheckForGameTie()
+		{
+			if (TicTacToeLogic.MoveCounter >= 9 && !TicTacToeLogic.GameOver)
+			{
+				UpdateGameLabelForNextPlayer(TiedGameMessage, Brushes.Black);
+				TicTacToeLogic.GameOver = true;
+			}
+		}
+
+		/// <summary>
+		/// Checks if the rectangle a player clicked on is "valid." (not claimed by either player)
+		/// </summary>
+		/// <param name="clickedRectangleIndex">The index of the grid rectangle selected by the user.</param>
+		/// <returns>True if the clicked rectangle has not been claimed by a player.</returns>
+		private bool IsValidMove(int clickedRectangleIndex)
+		{
+			if (TicTacToeLogic.PickedRectangles[clickedRectangleIndex] == 0)
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>
 		/// Updates the game UI based on the last player's actions.
 		/// </summary>
-		/// <param name="clickedRectangle"></param>
+		/// <param name="clickedRectangle">The rectangle clicked by the user.</param>
 		private void UpdateGameUi(Rectangle clickedRectangle)
 		{
 			if (TicTacToeLogic.IsPlayerOneTurn)
 			{
-				UpdateRectangleFillColor(clickedRectangle, Colors.Red);
-				UpdateLabelsForNextPlayer(Player2Message, Brushes.Blue);
+				UpdateRectangleFill(clickedRectangle, SymbolX, new SolidColorBrush(Colors.Red));
+				UpdateGameLabelForNextPlayer(Player2Message, Brushes.Blue);
 			}
 			else
 			{
-				UpdateRectangleFillColor(clickedRectangle, Colors.Blue);
-				UpdateLabelsForNextPlayer(Player1Message, Brushes.Red);
+				UpdateRectangleFill(clickedRectangle, SymbolO, new SolidColorBrush(Colors.Blue));
+				UpdateGameLabelForNextPlayer(Player1Message, Brushes.Red);
 			}
 		}
 
@@ -103,16 +165,16 @@ namespace TicTacToe
 		/// </summary>
 		/// <param name="clickedRectangle">The rectangle clicked by the user.</param>
 		/// <param name="color">The color the rectangle will be filled with.</param>
-		/// <remarks>
-		/// This method is called by the UpdateGameUi method, which is called after a
-		/// player clicks a game rectangle or resets the game. Passing in null allows
-		/// this same code to work when reseting the game.
-		/// </remarks>
-		private void UpdateRectangleFillColor(Rectangle clickedRectangle, Color color)
+		private void UpdateRectangleFill(Rectangle clickedRectangle, string playerSymbol, Brush color)
 		{
 			if (clickedRectangle != null)
 			{
-				clickedRectangle.Fill = new SolidColorBrush(color);
+				TextBlock tb = new TextBlock();
+				tb.FontSize = 72;
+				tb.Background = color;
+				tb.Text = playerSymbol;
+				BitmapCacheBrush bcb = new BitmapCacheBrush(tb);
+				clickedRectangle.Fill = bcb;
 			}
 		}
 
@@ -121,7 +183,7 @@ namespace TicTacToe
 		/// </summary>
 		/// <param name="labelMessage">The message being passed to the label.</param>
 		/// <param name="color">The color the label should be updated to.</param>
-		private void UpdateLabelsForNextPlayer(string labelMessage, Brush color)
+		private void UpdateGameLabelForNextPlayer(string labelMessage, Brush color)
 		{
 			label_GameMessage.Content = labelMessage;
 			label_GameMessage.Foreground = color;
@@ -137,7 +199,7 @@ namespace TicTacToe
 		/// </remarks>
 		private void UpdateGameLogicMap(int arrayIndex)
 		{
-			int mapValue = (TicTacToeLogic.IsPlayerOneTurn) ? 1 : 2;
+			int mapValue = TicTacToeLogic.CurrentPlayer;
 			TicTacToeLogic.PickedRectangles[arrayIndex] = mapValue;
 		}
 	}

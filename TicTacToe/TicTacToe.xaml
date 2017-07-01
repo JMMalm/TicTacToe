@@ -17,6 +17,6 @@
 		<Rectangle x:Name="rectangle_LowerLeft" MouseLeftButtonDown="OnRectangleClick" Fill="White" HorizontalAlignment="Left" Height="100" Margin="6,200,0,0" Stroke="Black" VerticalAlignment="Top" Width="100" Uid="6"/>
 		<Rectangle x:Name="rectangle_LowerMiddle" MouseLeftButtonDown="OnRectangleClick" Fill="White" HorizontalAlignment="Left" Height="100" Margin="106,200,0,0" Stroke="Black" VerticalAlignment="Top" Width="100" Uid="7"/>
 		<Rectangle x:Name="rectangle_LowerRight" MouseLeftButtonDown="OnRectangleClick" Fill="White" HorizontalAlignment="Left" Height="100" Margin="206,200,0,0" Stroke="Black" VerticalAlignment="Top" Width="100" Uid="8"/>
-		<Label x:Name="label_GameMessage" Content="Welcome to WPF Tic Tac Toe!" Margin="71,300,82,0" VerticalAlignment="Top" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+		<Label x:Name="label_GameMessage" Content="Welcome to WPF Tic Tac Toe!" Margin="71,300,82,0" VerticalAlignment="Top" HorizontalAlignment="Center" HorizontalContentAlignment="Center" FontSize="14"/>
 	</Grid>
 </Window>
