@@ -15,32 +15,17 @@ namespace TicTacToe.Logic
 		/// <summary>
 		/// Tracks the number of moves made by the players.
 		/// </summary>
-		private int _moveCounter = 0;
-		public int MoveCounter
-		{
-			get { return _moveCounter; }
-			set { _moveCounter = value; }
-		}
+		public int MoveCounter { get; set; } = 0;
 
 		/// <summary>
 		/// Keeps track of the current player.
 		/// </summary>
-		private int _currentPlayer = 1;
-		public int CurrentPlayer
-		{
-			get { return _currentPlayer; }
-			set { _currentPlayer = value; }
-		}
+		public int CurrentPlayer { get; set; } = 1;
 
 		/// <summary>
 		/// Keeps track of whether the game is over (via won or draw).
 		/// </summary>
-		private bool _gameOver;
-		public bool GameOver
-		{
-			get { return _gameOver; }
-			set { _gameOver = value; }
-		}
+		public bool GameOver { get; set; }
 
 		/// <summary>
 		/// Determine the current player. Used by the UI and game logic.
@@ -61,12 +46,7 @@ namespace TicTacToe.Logic
 		/// This array maps to the rectangles' UID in the XAML.
 		/// 0 is unclaimed; 1 = player 1; 2 = player 2.
 		/// </remarks>
-		private int[] _pickedRectangles = new int[9];
-		public int[] PickedRectangles
-		{
-			get { return _pickedRectangles; }
-			set { _pickedRectangles = value; }
-		}
+		public int[] PickedRectangles { get; set; } = new int[9];
 
 		/// <summary>
 		/// Constructor.
@@ -80,6 +60,21 @@ namespace TicTacToe.Logic
 		public void CheckForGameWinner()
 		{
 			GameOver = GameWinnerFound();
+		}
+
+		/// <summary>
+		/// Checks if the rectangle a player clicked on is "valid." (not claimed by either player)
+		/// </summary>
+		/// <param name="clickedRectangleIndex">The index of the grid rectangle selected by the user.</param>
+		/// <returns>True if the clicked rectangle has not been claimed by a player.</returns>
+		public bool IsValidMove(int clickedRectangleIndex)
+		{
+			if (PickedRectangles[clickedRectangleIndex] == 0)
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>

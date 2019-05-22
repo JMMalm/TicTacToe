@@ -65,7 +65,7 @@ namespace TicTacToe
 			Rectangle clickedPiece = e.Source as Rectangle;
 			int rectangleId = Convert.ToInt32(clickedPiece.Uid);
 
-			if (IsValidMove(rectangleId))
+			if (TicTacToeLogic.IsValidMove(rectangleId))
 			{
 				UpdateGameUi(clickedPiece);
 				UpdateGameLogicMap(rectangleId);
@@ -125,21 +125,6 @@ namespace TicTacToe
 				UpdateGameLabelForNextPlayer(TiedGameMessage, Brushes.Black);
 				TicTacToeLogic.GameOver = true;
 			}
-		}
-
-		/// <summary>
-		/// Checks if the rectangle a player clicked on is "valid." (not claimed by either player)
-		/// </summary>
-		/// <param name="clickedRectangleIndex">The index of the grid rectangle selected by the user.</param>
-		/// <returns>True if the clicked rectangle has not been claimed by a player.</returns>
-		private bool IsValidMove(int clickedRectangleIndex)
-		{
-			if (TicTacToeLogic.PickedRectangles[clickedRectangleIndex] == 0)
-			{
-				return true;
-			}
-
-			return false;
 		}
 
 		/// <summary>
