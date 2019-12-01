@@ -1,10 +1,10 @@
 # MyDashboard
-A simple game of Tic Tac Toe using WPF and C#.
+A simple game of Tic Tac Toe using WPF and C#, now with .NET Core 3.0.
 
 ## Built With
-* Visual Studio 2015
-* .NET 4.5.2
-* WPF 3.0
+* Visual Studio 2019
+* .NET Core 3.0
+* WPF
 * C#
 
 ## Local Setup
