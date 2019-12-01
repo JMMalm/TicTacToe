@@ -53,12 +53,6 @@
     <Compile Include="GameLogicTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TicTacToe.Logic\TicTacToe.Logic.csproj">
-      <Project>{3a3e7677-fe36-4ebf-8a52-105b0e2af0a4}</Project>
-      <Name>TicTacToe.Logic</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

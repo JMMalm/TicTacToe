@@ -8,6 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\TicTacToe.Logic\TicTacToe.Logic.csproj" />
+	  <ProjectReference Include="..\TicTacToe.Logic\TicTacToe.Core.Logic.csproj" />
 	</ItemGroup>
 </Project>
