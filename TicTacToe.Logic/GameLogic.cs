@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
-
-namespace TicTacToe.Logic
+﻿namespace TicTacToe.Logic
 {
 	/// <summary>
 	/// Handles the game logic for Tic Tac Toe and keeps track of player data.
